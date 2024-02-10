@@ -1,12 +1,12 @@
 # Site settings
-title:
-email:
+title: Philipp Alexander Kreer
+email: philipp.a.kreer@outlook.de
 description: > # this means to ignore newlines until "baseurl:"
 baseurl: "https://p-a-kreer.hithub.io" # the subpath of your site, e.g. /blog/
 url: "https://p-a-kreer.hithub.io" # the base hostname & protocol for your site
 
 twitter_username:
-github_username:
+github_username: p-a-kreer
 
 # Build settings
 markdown: kramdown
