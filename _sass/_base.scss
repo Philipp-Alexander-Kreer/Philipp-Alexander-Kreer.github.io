@@ -55,6 +55,15 @@ p {
     color: rgba(white, .7);
 }
 
+.external-link {
+    color: rgba(255, 255, 255, 0.7); /* Your desired color */
+    text-decoration: none; /* Optional: Remove underline from links */
+}
+
+.external-link:hover {
+    text-decoration: underline; /* Optional: Add underline on hover */
+}
+
 section {
     padding: 100px 0;
 }
