@@ -57,7 +57,7 @@ p {
 
 .external-link {
     color: rgba(255, 255, 255, 0.7); /* Your desired color */
-    /*text-decoration: none; /* Optional: Remove underline from links */
+    text-decoration: underline;
 }
 
 .external-link:hover {
