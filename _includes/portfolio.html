@@ -67,23 +67,28 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 text-center">
                 <div class="block-text">
-                    <h2 class="section-heading">Read&Eat: Physics meets explainable AI</h2>
+                    <h2 class="section-heading">Sample Project: Sandbag Detection through Noise-injection</h2>
+                    <h3>AGI Deception Detection Hackathon Winner & Accepted to NeurIPS 2024</h3>
                     <hr class="light">
-                    <p class="text-faded">
-                        Join our reading group and dinner discussions on topics at the intersection of theoretical physics and AI.
-                        We meet every Thursday at 5pm in the kitchen of the
-                        <a href="https://www.ph.tum.de/about/visit/roomfinder/?room=5101.01.342&language=de" class="external-link">
-                        Theoretical Physics Department at TUM Campus in Garching </a>.
-                        We read together a paper and discuss it over a delicious dinner.
-                    </p>
-                    <p class="text-faded">
-                        Currently, we are reading the book "The Principles of Deep Learning Theory",
-                        which is available <a href="https://arxiv.org/abs/2106.10165" class="external-link">here</a>. The book adopts the perspective of neural networks as a system of interacting particles.
-                        Starting from this analogy, it is possible to derive a set of principles that govern the behavior of neural networks in the regime where the depth is small compared to the width.
-                        For me personally, it is interesting to learn about the training dynamics of neural networks, e.g. under which conditions is the network able to learn?
-                        How does the input data, especially special features such as singular points or branch cuts, influence the training dynamics? What does this mean for the interpretability of the network?
-                    </p>
-                <a href="#contact" class="btn btn-default btn-xl wow tada">Join us now!</a>
+                    <div class="project-sample">
+                        <p>
+                            Motivation: There is an incentive for AI developers to develop AI systems that intentionally hide risky capabilities, such as hazardous biological, chemical and cyberattack knowledge, to avoid government regulations (e.g. the European Union AI Act)
+                        </p>
+                        <p>
+                            Project Target: Detection of strategic under performance - sandbagging - in advanced large language models (e.g., Llama-3.1-70B).
+                        </p>
+                        <p>
+                            Method: I coded a noise-injection algorithm in PyTorch, with which I add increasing random noise to the model's parameters. The noise disrupts the deceptive behavior.
+                        </p>
+                        <p>
+                            Results: Suddenly the model performs significantly better than without noise which indicates sandbagging.
+                        </p>
+                        <p>
+                            <a href="https://www.apartresearch.com/project/sandbag-detection-through-model-degradation" target="_blank">Paper</a> |
+                            <a href="https://github.com/camtice/SandbagDetect" target="_blank">GitHub</a> |
+                            <a href="https://www.youtube.com/watch?v=EWpYmSCoXaI" target="_blank">Flash Talk (42:00)</a>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
