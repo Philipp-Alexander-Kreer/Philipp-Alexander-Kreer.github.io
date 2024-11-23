@@ -73,6 +73,14 @@ h6 {
     margin-left: 40px;
 }
 
+.text-faded-contact {
+    color: rgba(white, .8);
+    font-size: 20px;
+    text-align: justify;
+    margin-right: 20px;
+    margin-left: 20px;
+}
+
 .external-link {
     color: rgba(255, 255, 255, 0.7); /* Your desired color */
     text-decoration: underline;
@@ -230,7 +238,7 @@ header {
                     font-size: 9em !important;
                 }
                 p {
-                    font-size: 55px;
+                    font-size: 59px;
                     max-width: 100%;
                     font-weight: 700;
                     margin-left: auto;
@@ -289,6 +297,7 @@ header {
             .project-category {
                 text-transform: uppercase;
                 font-size: 18px;
+                text-align: center;
             }
             .project-name {
                 font-weight: 600;
@@ -307,64 +316,7 @@ header {
             .portfolio-box-caption-content {
                 .project-category {
                     font-size: 16px;
-                }
-                .project-name {
-                    font-size: 22px;
-                }
-            }
-        }
-    }
-}
-
-
-.GPT-box {
-    position: relative;
-    display: block;
-    max-width: 650px;
-    margin: 0 auto;
-    .portfolio-box-caption {
-        color: white;
-        opacity: 0;
-        display: block;
-        background: rgba( $theme-primary, .9 );
-        position: absolute;
-        bottom: 0;
-        text-align: center;
-        width: 2023px;
-        height: auto;
-        @include transition-all;
-        .portfolio-box-caption-content {
-            width: 100%;
-            text-align: center;
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            .project-category,
-            .project-name {
-                @include sans-serif-font;
-                padding: 0 15px;
-            }
-            .project-category {
-                text-transform: uppercase;
-                font-weight: 600;
-                font-size: 14px;
-            }
-            .project-name {
-                font-size: 18px;
-            }
-        }
-
-    }
-    &:hover {
-        .portfolio-box-caption {
-            opacity: 1;
-        }
-    }
-    @media (min-width: 768px) {
-        .portfolio-box-caption {
-            .portfolio-box-caption-content {
-                .project-category {
-                    font-size: 16px;
+                    text-align: center;
                 }
                 .project-name {
                     font-size: 22px;
