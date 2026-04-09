@@ -1,3 +1,790 @@
----
-layout: front
----
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Philipp Alexander Kreer — AI Research Scientist & Builder</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink:    '#1A1814',
+            parch:  '#F7F4EF',
+            amber:  '#C47B2B',
+            'amber-light': '#E8A84A',
+            'amber-dim':  '#8A5520',
+            stone:  '#6B6560',
+            'stone-light': '#B8B3AE',
+            'parch-dark': '#EDE9E2',
+          },
+          fontFamily: {
+            display: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            body:    ['"DM Sans"', 'system-ui', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* ─── Base ─────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: #F7F4EF;
+      color: #1A1814;
+      font-family: 'DM Sans', system-ui, sans-serif;
+      font-size: 17px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── Grain overlay ────────────────────────────────────── */
+    .grain::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.032;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-size: 256px 256px;
+    }
+
+    /* ─── Typography ───────────────────────────────────────── */
+    .font-display { font-family: 'Cormorant Garamond', Georgia, serif; }
+
+    h1, h2, h3 { font-family: 'Cormorant Garamond', Georgia, serif; }
+
+    .heading-xl {
+      font-size: clamp(3rem, 7vw, 5.5rem);
+      font-weight: 300;
+      letter-spacing: -0.03em;
+      line-height: 1.0;
+      font-family: 'Cormorant Garamond', Georgia, serif;
+    }
+    .heading-lg {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      font-family: 'Cormorant Garamond', Georgia, serif;
+    }
+    .heading-md {
+      font-size: clamp(1.4rem, 2.5vw, 1.9rem);
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      font-family: 'Cormorant Garamond', Georgia, serif;
+    }
+    .label {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    /* ─── Nav ──────────────────────────────────────────────── */
+    #nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(247, 244, 239, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(196,123,43,0.12);
+      transition: box-shadow 0.3s ease;
+    }
+    #nav.scrolled {
+      box-shadow: 0 4px 32px rgba(196,123,43,0.08), 0 1px 0 rgba(196,123,43,0.15);
+    }
+    .nav-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.25rem;
+      font-weight: 500;
+      color: #1A1814;
+      text-decoration: none;
+      letter-spacing: -0.01em;
+    }
+    .nav-links { display: flex; gap: 2rem; list-style: none; margin: 0; padding: 0; }
+    .nav-links a {
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #6B6560;
+      text-decoration: none;
+      position: relative;
+      padding-bottom: 2px;
+      transition: color 0.2s ease;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0; height: 1px;
+      background: #C47B2B;
+      transition: width 0.25s ease;
+    }
+    .nav-links a:hover { color: #1A1814; }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-links a:focus-visible { outline: 2px solid #C47B2B; outline-offset: 4px; border-radius: 2px; }
+
+    /* ─── Amber rule ───────────────────────────────────────── */
+    .amber-rule {
+      width: 48px; height: 2px;
+      background: #C47B2B;
+      margin: 1.5rem 0;
+    }
+
+    /* ─── Buttons ──────────────────────────────────────────── */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85rem 2rem;
+      background: #C47B2B;
+      color: #F7F4EF;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      border-radius: 2px;
+      box-shadow: 0 4px 20px rgba(196,123,43,0.25), 0 1px 4px rgba(196,123,43,0.15);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+    .btn-primary:hover {
+      background: #B86E20;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 32px rgba(196,123,43,0.32), 0 2px 8px rgba(196,123,43,0.2);
+    }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-primary:focus-visible { outline: 2px solid #C47B2B; outline-offset: 4px; }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.6rem 1.2rem;
+      border: 1px solid rgba(196,123,43,0.4);
+      color: #C47B2B;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      border-radius: 2px;
+      transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+    }
+    .btn-outline:hover {
+      background: rgba(196,123,43,0.06);
+      border-color: #C47B2B;
+    }
+    .btn-outline:focus-visible { outline: 2px solid #C47B2B; outline-offset: 4px; }
+
+    /* ─── Sections ─────────────────────────────────────────── */
+    .section-wrap {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* ─── Hero ─────────────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: 64px;
+      position: relative;
+      overflow: hidden;
+    }
+    #hero::before {
+      content: '';
+      position: absolute;
+      top: -20%;
+      right: -10%;
+      width: 60vw;
+      height: 80vh;
+      background: radial-gradient(ellipse at 70% 30%, rgba(196,123,43,0.07) 0%, transparent 65%),
+                  radial-gradient(ellipse at 30% 80%, rgba(196,123,43,0.04) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 4rem;
+      align-items: center;
+      width: 100%;
+      padding: 5rem 0;
+    }
+    .hero-photo-wrap {
+      position: relative;
+      width: 420px;
+      height: 520px;
+    }
+    .hero-photo-bg {
+      position: absolute;
+      inset: 12px 0 0 12px;
+      background: rgba(196,123,43,0.12);
+      border-radius: 3px;
+    }
+    .hero-photo {
+      position: absolute;
+      inset: 0 12px 12px 0;
+      width: calc(100% - 12px);
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      border-radius: 3px;
+      filter: grayscale(15%) contrast(1.04);
+    }
+    .hero-photo-overlay {
+      position: absolute;
+      inset: 0 12px 12px 0;
+      border-radius: 3px;
+      background: linear-gradient(to bottom, transparent 50%, rgba(26,24,20,0.35) 100%);
+    }
+
+    /* ─── Fade-in animation ────────────────────────────────── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .delay-1 { transition-delay: 0.1s; }
+    .delay-2 { transition-delay: 0.2s; }
+    .delay-3 { transition-delay: 0.32s; }
+    .delay-4 { transition-delay: 0.44s; }
+    .delay-5 { transition-delay: 0.56s; }
+
+    /* ─── Project cards ────────────────────────────────────── */
+    .project-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      margin-bottom: 5rem;
+      align-items: center;
+    }
+    .project-row:last-child {
+      margin-bottom: 0;
+    }
+    .project-row.reverse { direction: rtl; }
+    .project-row.reverse > * { direction: ltr; }
+
+    .project-img-wrap {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 4/3;
+    }
+    .project-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+      filter: grayscale(10%) contrast(1.03);
+    }
+    .project-img-wrap:hover img { transform: scale(1.03); }
+    .project-img-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 40%, rgba(26,24,20,0.55) 100%);
+      mix-blend-mode: multiply;
+    }
+    .project-img-color {
+      position: absolute;
+      inset: 0;
+      background: rgba(196,123,43,0.08);
+      mix-blend-mode: multiply;
+    }
+
+    .project-text {
+      padding: 3rem 3.5rem;
+      background: #F7F4EF;
+    }
+    .project-row.reverse .project-text {
+      padding: 3rem 3.5rem;
+    }
+
+    /* ─── Service cards ────────────────────────────────────── */
+    .service-card {
+      padding: 2.5rem 2rem;
+      background: #F7F4EF;
+      border: 1px solid rgba(196,123,43,0.12);
+      border-radius: 3px;
+      box-shadow: 0 2px 16px rgba(196,123,43,0.06), 0 1px 4px rgba(26,24,20,0.04);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .service-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 32px rgba(196,123,43,0.12), 0 2px 8px rgba(26,24,20,0.06);
+    }
+    .service-icon {
+      width: 44px; height: 44px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(196,123,43,0.1);
+      border-radius: 50%;
+      margin-bottom: 1.25rem;
+      color: #C47B2B;
+      font-size: 1.2rem;
+    }
+
+    /* ─── Contact ──────────────────────────────────────────── */
+    #contact {
+      background: #1A1814;
+      color: #F7F4EF;
+      position: relative;
+      overflow: hidden;
+    }
+    #contact::before {
+      content: '';
+      position: absolute;
+      top: -40%;
+      left: -10%;
+      width: 70vw;
+      height: 140%;
+      background: radial-gradient(ellipse at 30% 50%, rgba(196,123,43,0.08) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .contact-email {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(1.5rem, 3vw, 2.4rem);
+      font-weight: 300;
+      color: #C47B2B;
+      text-decoration: none;
+      letter-spacing: -0.01em;
+      border-bottom: 1px solid rgba(196,123,43,0.3);
+      padding-bottom: 2px;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+    .contact-email:hover { color: #E8A84A; border-color: #E8A84A; }
+    .contact-email:focus-visible { outline: 2px solid #C47B2B; outline-offset: 4px; }
+
+    .social-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #B8B3AE;
+      text-decoration: none;
+      padding: 0.75rem 1.25rem;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 2px;
+      transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+    .social-link:hover {
+      color: #F7F4EF;
+      border-color: rgba(196,123,43,0.4);
+      background: rgba(196,123,43,0.06);
+    }
+    .social-link:focus-visible { outline: 2px solid #C47B2B; outline-offset: 4px; }
+
+    /* ─── Expand/collapse ───────────────────────────────────── */
+    .expand-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: none;
+      border: none;
+      padding: 0.4rem 0;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: #C47B2B;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+    .expand-btn:hover { color: #8A5520; }
+    .expand-btn:focus-visible { outline: 2px solid #C47B2B; outline-offset: 4px; border-radius: 2px; }
+    .expand-btn[aria-expanded="true"] svg { transform: rotate(180deg); }
+
+    /* ─── Responsive ───────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .hero-inner {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+        padding: 3rem 0 4rem;
+      }
+      .hero-photo-wrap {
+        width: 100%;
+        max-width: 360px;
+        height: 420px;
+        margin: 0 auto;
+      }
+      .project-row, .project-row.reverse {
+        grid-template-columns: 1fr;
+        direction: ltr;
+      }
+      .project-text, .project-row.reverse .project-text {
+        padding: 2rem 1.5rem;
+      }
+    }
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      .section-wrap { padding: 0 1.25rem; }
+    }
+  </style>
+</head>
+
+<body class="grain">
+
+  <!-- ═══════════════════════════════════════════ NAV -->
+  <nav id="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="#hero" class="nav-logo">Philipp Kreer</a>
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#work">Work</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════ HERO -->
+  <section id="hero">
+    <div class="section-wrap" style="width:100%;">
+      <div class="hero-inner">
+
+        <!-- Left: Text -->
+        <div>
+          <p class="label fade-up" style="color:#C47B2B; margin-bottom:1.5rem;">AI Research Scientist &amp; Builder</p>
+          <h1 class="heading-xl fade-up delay-1">
+            Philipp<br>Alexander<br>Kreer
+          </h1>
+          <div class="amber-rule fade-up delay-2"></div>
+          <p class="fade-up delay-3" style="font-size:1.15rem; color:#6B6560; max-width:460px; margin-bottom:2rem;">
+            I build AI for entrepreneurs and small teams. Less tedious work. More of what you love.
+          </p>
+          <div class="fade-up delay-4" style="display:flex; gap:1rem; flex-wrap:wrap; align-items:center;">
+            <a href="#contact" class="btn-primary">
+              Get in touch
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+            <a href="#work" class="btn-outline">See my work</a>
+          </div>
+        </div>
+
+        <!-- Right: Photo -->
+        <div class="hero-photo-wrap fade-up delay-3">
+          <div class="hero-photo-bg"></div>
+          <img class="hero-photo" src="img/profile_picture.jpg" alt="Philipp Alexander Kreer" />
+          <div class="hero-photo-overlay"></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ ABOUT / THE IDEA -->
+  <section id="about" style="padding: 7rem 0; border-top: 1px solid rgba(196,123,43,0.1);">
+    <div class="section-wrap">
+
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5rem; align-items:start;" class="responsive-grid">
+
+        <!-- Pull quote -->
+        <div class="fade-up">
+          <p class="label" style="color:#C47B2B; margin-bottom:1.5rem;">The Idea</p>
+          <blockquote style="font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(1.5rem,2.5vw,2rem); font-weight:300; font-style:italic; line-height:1.4; color:#1A1814; border-left:2px solid #C47B2B; padding-left:1.5rem; margin:0 0 2rem;">
+            "I wasted years debugging. AI gave me back what I love: researching and building."
+          </blockquote>
+          <p style="color:#6B6560; font-size:0.875rem;">— Philipp, on what changed</p>
+        </div>
+
+        <!-- Body text -->
+        <div class="fade-up delay-2">
+          <h2 class="heading-lg" style="margin-bottom:1.5rem;">Do more of<br><em>what you love.</em></h2>
+          <p style="color:#6B6560; margin-bottom:1.25rem;">
+            I love research. The thrill of answering questions no one knows the answer to. But for years, most of my time went elsewhere: debugging code, fixing typos, moving and searching files, updating programs. I spent a fraction of the day on thinking and doing what I enjoyed.
+          </p>
+          <p style="color:#6B6560; margin-bottom:1.25rem;">
+            With every new AI release, I automated more of the tedious work. Suddenly I had time. To read papers about things that fascinated me. To sit in the garden with a pencil and paper working out the problems that AI couldn't solve. I started doing real research.
+          </p>
+          <p style="color:#1A1814; font-weight:500; margin-bottom:2rem;">
+            AI is the tool that frees your passion. It is for the free-lancer buried in admin, or the entrepreneur with a vision to fix a pressing problem. Whatever your craft, I help you do more of it.
+          </p>
+          <div class="amber-rule"></div>
+          <p class="label" style="color:#6B6560;">PhD, TU Munich &nbsp;·&nbsp; Research Scientist, Timaeus &nbsp;·&nbsp; NeurIPS &nbsp;·&nbsp; ICML</p>
+        </div>
+
+      </div>
+
+      <!-- Who it's for -->
+      <div style="margin-top:6rem;">
+        <p class="label fade-up" style="color:#C47B2B; margin-bottom:2.5rem; text-align:center;">Who this is for</p>
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem;" class="cards-grid">
+
+          <div class="fade-up delay-1" style="padding:2rem 1.75rem; border-top:2px solid #C47B2B;">
+            <p class="heading-md" style="margin-bottom:0.75rem;">The Passionate</p>
+            <p style="color:#6B6560; font-size:0.95rem;">You love your craft. Half your day you're doing something else? I build the tool that gives you back your time.</p>
+          </div>
+
+          <div class="fade-up delay-2" style="padding:2rem 1.75rem; border-top:2px solid #C47B2B;">
+            <p class="heading-md" style="margin-bottom:0.75rem;">The Specialist</p>
+            <p style="color:#6B6560; font-size:0.95rem;">Off-the-shelf AI doesn't fit how you work? I develop systems tailored to your domain.</p>
+          </div>
+
+          <div class="fade-up delay-3" style="padding:2rem 1.75rem; border-top:2px solid #C47B2B;">
+            <p class="heading-md" style="margin-bottom:0.75rem;">The Visionary</p>
+            <p style="color:#6B6560; font-size:0.95rem;">You see what AI could do in your field, but you lack the tools? I research the problem and find out what works.</p>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ WORK -->
+  <section id="work" style="padding:7rem 0; background:#EDE9E2; border-top:1px solid rgba(196,123,43,0.1);">
+    <div class="section-wrap">
+
+      <div style="margin-bottom:4rem;" class="fade-up">
+        <p class="label" style="color:#C47B2B; margin-bottom:0.75rem;">Selected Work</p>
+      </div>
+
+      <!-- Project 1: Sandbag Detection -->
+      <div class="project-row fade-up">
+        <div class="project-img-wrap">
+          <img src="img/portfolio/Project_Sandbag.jpg" alt="Sandbag Detection project visualization" />
+          <div class="project-img-overlay"></div>
+          <div class="project-img-color"></div>
+        </div>
+        <div class="project-text">
+          <p class="label" style="color:#C47B2B; margin-bottom:1rem;">AI Safety &nbsp;·&nbsp; TU Munich &amp; APART Research &nbsp;·&nbsp; 2024–2025</p>
+          <h3 class="heading-md" style="margin-bottom:1rem;">Noise Injection Reveals Hidden Capabilities of Sandbagging Language Models</h3>
+          <p style="color:#1A1814; margin-bottom:1rem; font-size:1.05rem;">
+            How do you catch a lying AI? You make it drunk.
+          </p>
+          <div class="expandable">
+            <div class="expandable-content" style="max-height:0; overflow:hidden; transition: max-height 0.5s ease, opacity 0.4s ease; opacity:0;">
+              <p style="color:#6B6560; margin-bottom:1rem;">
+                Just like humans reveal more than they intend after a few drinks, AI systems expose hidden capabilities when you shake them up during interrogation. In mathematical terms: inject random noise into all model parameters during benchmark evaluation. The deception breaks down, the true capabilities surface.
+              </p>
+              <p style="color:#6B6560; margin-bottom:1rem;">
+                I used this to detect strategic deception in models like Phi3, Llama 3, and Mistral.
+                First author at <strong style="color:#1A1814;">NeurIPS 2024</strong> workshop, second author at <strong style="color:#1A1814;">NeurIPS 2025</strong>. Featured in the <strong style="color:#1A1814;">AI2027 report</strong>.
+              </p>
+            </div>
+            <button onclick="toggleExpand(this)" class="expand-btn" aria-expanded="false">
+              Read more
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="transition: transform 0.3s ease;" aria-hidden="true">
+                <path d="M3 5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+          <div style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-top:1rem;">
+            <a href="https://arxiv.org/abs/2412.01784" class="btn-outline" target="_blank" rel="noopener">
+              Read paper →
+            </a>
+            <a href="https://github.com/camtice/SandbagDetect" class="btn-outline" target="_blank" rel="noopener">
+              Inspect code →
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project: Timaeus / Bayesian Influence Functions -->
+      <div class="project-row reverse fade-up">
+        <div class="project-img-wrap">
+          <img src="img/timaeus_poster.png" alt="Bayesian Influence Functions for Hessian-Free Data Attribution poster" style="object-position: top center;" />
+          <div class="project-img-overlay"></div>
+          <div class="project-img-color"></div>
+        </div>
+        <div class="project-text">
+          <p class="label" style="color:#C47B2B; margin-bottom:1rem;">AI Safety &nbsp;·&nbsp; Timaeus Research Inc. &nbsp;·&nbsp; 2025–Present</p>
+          <h3 class="heading-md" style="margin-bottom:1rem;">Bayesian Influence Functions for Hessian-Free Data Attribution</h3>
+          <p style="color:#1A1814; margin-bottom:1rem; font-size:1.05rem;">
+            How does training data shape model behaviour? We traced it back to individual training samples.
+          </p>
+          <div class="expandable">
+            <div class="expandable-content" style="max-height:0; overflow:hidden; transition: max-height 0.5s ease, opacity 0.4s ease; opacity:0;">
+              <p style="color:#6B6560; margin-bottom:1rem;">
+                Every AI journey starts with training data. Models can be poisoned through it, hijacked through backdoors, or triggered by hidden vulnerabilities.
+              </p>
+              <p style="color:#6B6560; margin-bottom:1rem;">
+                We traced the behaviour of up to 3 billion parameter models back to individual training tokens using Bayesian influence functions. This is forensics for AI — understanding exactly which data shaped which behaviour, so we can build systems that are safe from the ground up.
+              </p>
+              <p style="color:#6B6560; margin-bottom:1rem;">
+                First author at <strong style="color:#1A1814;">ICML 2025</strong> workshop and <strong style="color:#1A1814;">ICLR 2026</strong>.
+              </p>
+            </div>
+            <button onclick="toggleExpand(this)" class="expand-btn" aria-expanded="false">
+              Read more
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="transition: transform 0.3s ease;" aria-hidden="true">
+                <path d="M3 5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+          <div style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-top:1rem;">
+            <a href="https://arxiv.org/abs/2509.26544" class="btn-outline" target="_blank" rel="noopener">
+              Read paper →
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project 2: Medical AI — ARCHIVED, will return -->
+      <!-- Project 3: Education — ARCHIVED, will return -->
+
+      <!-- Project 4: Physics -->
+      <div class="project-row fade-up">
+        <div class="project-img-wrap">
+          <img src="img/pentagon_blackboard.jpg" alt="Feynman diagram on blackboard" />
+          <div class="project-img-overlay"></div>
+          <div class="project-img-color"></div>
+        </div>
+        <div class="project-text">
+          <p class="label" style="color:#C47B2B; margin-bottom:1rem;">Theoretical Physics &nbsp;·&nbsp; TU Munich &nbsp;·&nbsp; PhD</p>
+          <h3 class="heading-md" style="margin-bottom:1rem;">Feynman Diagram Automation</h3>
+          <p style="color:#1A1814; margin-bottom:1rem; font-size:1.05rem;">
+            What is the origin of mass? I drew thousands of cartoons to find out.
+          </p>
+          <div class="expandable">
+            <div class="expandable-content" style="max-height:0; overflow:hidden; transition: max-height 0.5s ease, opacity 0.4s ease; opacity:0;">
+              <p style="color:#6B6560; margin-bottom:1rem;">
+                Each one describing how elementary particles collide or how black holes collide. These innocent-looking sketches are called Feynman diagrams, and they hide the terrifying and beautiful mathematics of General Relativity and Quantum Field Theory.
+              </p>
+              <p style="color:#6B6560; margin-bottom:1rem;">
+                My PhD at TU Munich focused on automating their evaluation for Higgs boson production at CERN's Large Hadron Collider and for merging black holes.
+              </p>
+            </div>
+            <button onclick="toggleExpand(this)" class="expand-btn" aria-expanded="false">
+              Read more
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="transition: transform 0.3s ease;" aria-hidden="true">
+                <path d="M3 5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+          <div style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-top:1rem;">
+            <a href="https://link.springer.com/article/10.1007/JHEP03(2024)093" class="btn-outline" target="_blank" rel="noopener">
+              Read Higgs boson paper →
+            </a>
+            <a href="https://journals.aps.org/prd/abstract/10.1103/PhysRevD.110.076018" class="btn-outline" target="_blank" rel="noopener">
+              Read black hole paper →
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Services section merged into "Who It's For" cards above -->
+
+  <!-- ═══════════════════════════════════════════ CONTACT -->
+  <section id="contact" style="padding:8rem 0;">
+    <div class="section-wrap">
+      <div style="max-width:640px;" class="fade-up">
+        <p class="label" style="color:#B8B3AE; margin-bottom:1.5rem;">Get in touch</p>
+        <h2 style="font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(2.5rem,5vw,4rem); font-weight:300; letter-spacing:-0.03em; line-height:1.05; color:#F7F4EF; margin-bottom:1.5rem;">
+          Let's talk.
+        </h2>
+        <p style="color:#B8B3AE; font-size:1.05rem; margin-bottom:3rem; line-height:1.7;">
+          The best projects start with a real conversation. If something here resonated — or if you know someone it might — I'd be glad to hear from you.
+        </p>
+        <a href="mailto:philipp.a.kreer@outlook.de" class="contact-email fade-up delay-1">
+          philipp.a.kreer@outlook.de
+        </a>
+        <div style="display:flex; gap:1rem; margin-top:3rem; flex-wrap:wrap;" class="fade-up delay-2">
+          <a href="https://www.linkedin.com/in/philipp-alexander-kreer-b25341208/" class="social-link" target="_blank" rel="noopener">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+            </svg>
+            LinkedIn
+          </a>
+          <a href="https://github.com/Philipp-Alexander-Kreer/" class="social-link" target="_blank" rel="noopener">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+            </svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ FOOTER -->
+  <footer style="background:#111009; padding:1.5rem 0; border-top:1px solid rgba(255,255,255,0.05);">
+    <div class="section-wrap" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+      <p style="color:#6B6560; font-size:0.78rem; margin:0;">© 2026 Philipp Alexander Kreer</p>
+      <p style="color:#3D3A36; font-size:0.78rem; margin:0;">Munich, Germany</p>
+    </div>
+  </footer>
+
+  <script>
+    // Nav scroll shadow
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 20);
+    }, { passive: true });
+
+    // Fade-up on scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(el => {
+        if (el.isIntersecting) {
+          el.target.classList.add('visible');
+          observer.unobserve(el.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // Expand/collapse
+    function toggleExpand(btn) {
+      const content = btn.parentElement.querySelector('.expandable-content');
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
+      if (expanded) {
+        content.style.maxHeight = '0';
+        content.style.opacity = '0';
+        btn.setAttribute('aria-expanded', 'false');
+        btn.childNodes[0].textContent = 'Read more ';
+      } else {
+        content.style.maxHeight = content.scrollHeight + 'px';
+        content.style.opacity = '1';
+        btn.setAttribute('aria-expanded', 'true');
+        btn.childNodes[0].textContent = 'Read less ';
+      }
+    }
+
+    // Responsive grid fix
+    const style = document.createElement('style');
+    style.textContent = `
+      @media (max-width: 768px) {
+        .responsive-grid { grid-template-columns: 1fr !important; gap: 3rem !important; }
+        .cards-grid { grid-template-columns: 1fr !important; }
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
+
+</body>
+</html>
