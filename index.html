@@ -124,6 +124,11 @@
       text-decoration: none;
       letter-spacing: -0.01em;
     }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
     .nav-links { display: flex; gap: 2rem; list-style: none; margin: 0; padding: 0; }
     .nav-links a {
       font-size: 0.78rem;
@@ -147,6 +152,122 @@
     .nav-links a:hover { color: #1A1814; }
     .nav-links a:hover::after { width: 100%; }
     .nav-links a:focus-visible { outline: 2px solid #C47B2B; outline-offset: 4px; border-radius: 2px; }
+
+    /* ─── Language picker ──────────────────────────────────── */
+    .lang-picker {
+      position: relative;
+    }
+    .lang-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: none;
+      border: 1px solid transparent;
+      padding: 0.35rem 0.6rem;
+      border-radius: 2px;
+      cursor: pointer;
+      color: #6B6560;
+      transition: color 0.2s ease, border-color 0.2s ease;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .lang-btn:hover {
+      color: #1A1814;
+      border-color: rgba(196,123,43,0.25);
+    }
+    .lang-btn:focus-visible {
+      outline: 2px solid #C47B2B;
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+    .lang-btn[aria-expanded="true"] {
+      color: #C47B2B;
+      border-color: rgba(196,123,43,0.3);
+    }
+    .lang-btn .lang-code {
+      min-width: 1.4em;
+    }
+    .lang-btn .lang-chevron {
+      transition: transform 0.25s ease;
+      margin-left: 0.1rem;
+    }
+    .lang-btn[aria-expanded="true"] .lang-chevron {
+      transform: rotate(180deg);
+    }
+
+    .lang-dropdown {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      min-width: 160px;
+      background: #F7F4EF;
+      border: 1px solid rgba(196,123,43,0.18);
+      border-radius: 3px;
+      box-shadow: 0 8px 32px rgba(26,24,20,0.08), 0 2px 8px rgba(196,123,43,0.06);
+      padding: 0.5rem 0;
+      opacity: 0;
+      transform: translateY(-6px);
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 200;
+    }
+    .lang-dropdown.open {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .lang-option {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      width: 100%;
+      padding: 0.6rem 1.25rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.05rem;
+      font-weight: 400;
+      color: #6B6560;
+      text-align: left;
+      transition: color 0.15s ease, background 0.15s ease;
+      letter-spacing: 0.01em;
+    }
+    .lang-option:hover {
+      color: #1A1814;
+      background: rgba(196,123,43,0.05);
+    }
+    .lang-option:focus-visible {
+      outline: 2px solid #C47B2B;
+      outline-offset: -2px;
+    }
+    .lang-option.active {
+      color: #C47B2B;
+      font-weight: 500;
+    }
+    /* ─── Flag icons ──────────────────────────────────────── */
+    .lang-flag {
+      display: inline-flex;
+      width: 20px;
+      height: 14px;
+      border-radius: 2px;
+      overflow: hidden;
+      flex-shrink: 0;
+      box-shadow: 0 0 0 0.5px rgba(0,0,0,0.12);
+    }
+    .lang-flag svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    .lang-divider {
+      height: 1px;
+      background: rgba(196,123,43,0.1);
+      margin: 0.35rem 1.25rem;
+    }
 
     /* ─── Amber rule ───────────────────────────────────────── */
     .amber-rule {
@@ -458,11 +579,45 @@
   <nav id="nav" role="navigation" aria-label="Main navigation">
     <div class="nav-inner">
       <a href="#hero" class="nav-logo">Philipp Kreer</a>
-      <ul class="nav-links">
-        <li><a href="#about">About</a></li>
-        <li><a href="#work">Work</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
+      <div class="nav-right">
+        <ul class="nav-links">
+          <li><a href="#about" data-i18n="nav_about">About</a></li>
+          <li><a href="#work" data-i18n="nav_work">Work</a></li>
+          <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
+        </ul>
+        <!-- Language picker -->
+        <div class="lang-picker">
+          <button class="lang-btn" id="langBtn" aria-expanded="false" aria-haspopup="true" aria-label="Select language">
+            <span class="lang-flag" id="langFlag"></span>
+            <span class="lang-code" id="langCode">EN</span>
+            <svg class="lang-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+              <path d="M2.5 4L5 6.5 7.5 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <div class="lang-dropdown" id="langDropdown" role="listbox" aria-label="Language selection">
+            <button class="lang-option active" role="option" aria-selected="true" data-lang="en">
+              <span class="lang-flag" data-flag="en"></span>
+              English
+            </button>
+            <button class="lang-option" role="option" aria-selected="false" data-lang="de">
+              <span class="lang-flag" data-flag="de"></span>
+              Deutsch
+            </button>
+            <button class="lang-option" role="option" aria-selected="false" data-lang="hu">
+              <span class="lang-flag" data-flag="hu"></span>
+              Magyar
+            </button>
+            <button class="lang-option" role="option" aria-selected="false" data-lang="es">
+              <span class="lang-flag" data-flag="es"></span>
+              Español
+            </button>
+            <button class="lang-option" role="option" aria-selected="false" data-lang="fr">
+              <span class="lang-flag" data-flag="fr"></span>
+              Français
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </nav>
 
@@ -473,22 +628,22 @@
 
         <!-- Left: Text -->
         <div>
-          <p class="label fade-up" style="color:#C47B2B; margin-bottom:1.5rem;">AI Research Scientist &amp; Builder</p>
+          <p class="label fade-up" style="color:#C47B2B; margin-bottom:1.5rem;" data-i18n="hero_label">AI Research Scientist &amp; Builder</p>
           <h1 class="heading-xl fade-up delay-1">
             Philipp<br>Alexander<br>Kreer
           </h1>
           <div class="amber-rule fade-up delay-2"></div>
-          <p class="fade-up delay-3" style="font-size:1.15rem; color:#6B6560; max-width:460px; margin-bottom:2rem;">
+          <p class="fade-up delay-3" style="font-size:1.15rem; color:#6B6560; max-width:460px; margin-bottom:2rem;" data-i18n="hero_tagline">
             I build AI solutions for entrepreneurs and small teams. Less tedious work. More of what you love.
           </p>
           <div class="fade-up delay-4" style="display:flex; gap:1rem; flex-wrap:wrap; align-items:center;">
             <a href="#contact" class="btn-primary">
-              Get in touch
+              <span data-i18n="hero_cta">Get in touch</span>
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
                 <path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </a>
-            <a href="#work" class="btn-outline">See my work</a>
+            <a href="#work" class="btn-outline" data-i18n="hero_work">See my work</a>
           </div>
         </div>
 
@@ -511,23 +666,23 @@
 
         <!-- Pull quote -->
         <div class="fade-up">
-          <p class="label" style="color:#C47B2B; margin-bottom:1.5rem;">The Idea</p>
-          <blockquote style="font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(1.5rem,2.5vw,2rem); font-weight:300; font-style:italic; line-height:1.4; color:#1A1814; border-left:2px solid #C47B2B; padding-left:1.5rem; margin:0 0 2rem;">
+          <p class="label" style="color:#C47B2B; margin-bottom:1.5rem;" data-i18n="about_label">The Idea</p>
+          <blockquote style="font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(1.5rem,2.5vw,2rem); font-weight:300; font-style:italic; line-height:1.4; color:#1A1814; border-left:2px solid #C47B2B; padding-left:1.5rem; margin:0 0 2rem;" data-i18n="about_quote">
             "I wasted years debugging. AI gave me back what I love: researching and building."
           </blockquote>
-          <p style="color:#6B6560; font-size:0.875rem;">— Philipp, on what changed</p>
+          <p style="color:#6B6560; font-size:0.875rem;" data-i18n="about_quote_attr">— Philipp, on what changed</p>
         </div>
 
         <!-- Body text -->
         <div class="fade-up delay-2">
-          <h2 class="heading-lg" style="margin-bottom:1.5rem;">Do more of<br><em>what you love.</em></h2>
-          <p style="color:#6B6560; margin-bottom:1.25rem;">
+          <h2 class="heading-lg" style="margin-bottom:1.5rem;" data-i18n-html="about_heading">Do more of<br><em>what you love.</em></h2>
+          <p style="color:#6B6560; margin-bottom:1.25rem;" data-i18n="about_p1">
             I love research. The thrill of answering questions no one knows the answer to. But for years, most of my time went elsewhere: debugging code, fixing typos, moving and searching files, updating programs. I spent a fraction of the day on thinking and doing what I enjoyed.
           </p>
-          <p style="color:#6B6560; margin-bottom:1.25rem;">
+          <p style="color:#6B6560; margin-bottom:1.25rem;" data-i18n="about_p2">
             With every new AI release, I automated more of the tedious work. Suddenly I had time. To read papers about things that fascinated me. To sit in the garden with a pencil and paper working out the problems that AI couldn't solve. I started doing real research.
           </p>
-          <p style="color:#1A1814; font-weight:500; margin-bottom:2rem;">
+          <p style="color:#1A1814; font-weight:500; margin-bottom:2rem;" data-i18n="about_p3">
             AI is the tool that frees your passion. It is for the free-lancer buried in admin, or the entrepreneur with a vision to fix a pressing problem. Whatever your craft, I help you do more of it.
           </p>
           <div class="amber-rule"></div>
@@ -538,22 +693,22 @@
 
       <!-- Who it's for -->
       <div style="margin-top:6rem;">
-        <p class="label fade-up" style="color:#C47B2B; margin-bottom:2.5rem; text-align:center;">Who this is for</p>
+        <p class="label fade-up" style="color:#C47B2B; margin-bottom:2.5rem; text-align:center;" data-i18n="who_label">Who this is for</p>
         <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem;" class="cards-grid">
 
           <div class="fade-up delay-1" style="padding:2rem 1.75rem; border-top:2px solid #C47B2B;">
-            <p class="heading-md" style="margin-bottom:0.75rem;">The Passionate</p>
-            <p style="color:#6B6560; font-size:0.95rem;">You love your craft. Half your day you're doing something else? I build the tool that gives you back your time.</p>
+            <p class="heading-md" style="margin-bottom:0.75rem;" data-i18n="passionate_title">The Passionate</p>
+            <p style="color:#6B6560; font-size:0.95rem;" data-i18n="passionate_desc">You love your craft. Half your day you're doing something else? I build the tool that gives you back your time.</p>
           </div>
 
           <div class="fade-up delay-2" style="padding:2rem 1.75rem; border-top:2px solid #C47B2B;">
-            <p class="heading-md" style="margin-bottom:0.75rem;">The Specialist</p>
-            <p style="color:#6B6560; font-size:0.95rem;">Off-the-shelf AI doesn't fit how you work? I develop systems tailored to your domain.</p>
+            <p class="heading-md" style="margin-bottom:0.75rem;" data-i18n="specialist_title">The Specialist</p>
+            <p style="color:#6B6560; font-size:0.95rem;" data-i18n="specialist_desc">Off-the-shelf AI doesn't fit how you work? I develop systems tailored to your domain.</p>
           </div>
 
           <div class="fade-up delay-3" style="padding:2rem 1.75rem; border-top:2px solid #C47B2B;">
-            <p class="heading-md" style="margin-bottom:0.75rem;">The Visionary</p>
-            <p style="color:#6B6560; font-size:0.95rem;">You see what AI could do in your field, but you lack the tools? I research the problem and find out what works.</p>
+            <p class="heading-md" style="margin-bottom:0.75rem;" data-i18n="visionary_title">The Visionary</p>
+            <p style="color:#6B6560; font-size:0.95rem;" data-i18n="visionary_desc">You see what AI could do in your field, but you lack the tools? I research the problem and find out what works.</p>
           </div>
 
         </div>
@@ -567,7 +722,7 @@
     <div class="section-wrap">
 
       <div style="margin-bottom:4rem;" class="fade-up">
-        <p class="label" style="color:#C47B2B; margin-bottom:0.75rem;">Selected Work</p>
+        <p class="label" style="color:#C47B2B; margin-bottom:0.75rem;" data-i18n="work_label">Selected Work</p>
       </div>
 
       <!-- Project 1: Sandbag Detection -->
@@ -578,33 +733,33 @@
           <div class="project-img-color"></div>
         </div>
         <div class="project-text">
-          <p class="label" style="color:#C47B2B; margin-bottom:1rem;">AI Safety &nbsp;·&nbsp; TU Munich &amp; APART Research &nbsp;·&nbsp; 2024–2025</p>
-          <h3 class="heading-md" style="margin-bottom:1rem;">Noise Injection Reveals Hidden Capabilities of Sandbagging Language Models</h3>
-          <p style="color:#1A1814; margin-bottom:1rem; font-size:1.05rem;">
+          <p class="label" style="color:#C47B2B; margin-bottom:1rem;" data-i18n-html="p1_label">AI Safety &nbsp;·&nbsp; TU Munich &amp; APART Research &nbsp;·&nbsp; 2024–2025</p>
+          <h3 class="heading-md" style="margin-bottom:1rem;" data-i18n-html="p1_title">Noise Injection Reveals Hidden Capabilities of Sandbagging Language Models</h3>
+          <p style="color:#1A1814; margin-bottom:1rem; font-size:1.05rem;" data-i18n="p1_hook">
             How do you catch a lying AI? You make it drunk.
           </p>
           <div class="expandable">
             <div class="expandable-content" style="max-height:0; overflow:hidden; transition: max-height 0.5s ease, opacity 0.4s ease; opacity:0;">
-              <p style="color:#6B6560; margin-bottom:1rem;">
+              <p style="color:#6B6560; margin-bottom:1rem;" data-i18n="p1_detail1">
                 Just like humans reveal more than they intend after a few drinks, AI systems expose hidden capabilities when you shake them up during interrogation. In mathematical terms: inject random noise into all model parameters during benchmark evaluation. The deception breaks down, the true capabilities surface.
               </p>
-              <p style="color:#6B6560; margin-bottom:1rem;">
+              <p style="color:#6B6560; margin-bottom:1rem;" data-i18n-html="p1_detail2">
                 I used this to detect strategic deception in models like Phi3, Llama 3, and Mistral.
                 First author at <strong style="color:#1A1814;">NeurIPS 2024</strong> workshop, second author at <strong style="color:#1A1814;">NeurIPS 2025</strong>. Featured in the <strong style="color:#1A1814;">AI2027 report</strong>.
               </p>
             </div>
-            <button onclick="toggleExpand(this)" class="expand-btn" aria-expanded="false">
-              Read more
+            <button onclick="toggleExpand(this)" class="expand-btn" aria-expanded="false" data-expand-key="p1">
+              <span data-i18n="read_more">Read more</span>
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="transition: transform 0.3s ease;" aria-hidden="true">
                 <path d="M3 5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </button>
           </div>
           <div style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-top:1rem;">
-            <a href="https://arxiv.org/abs/2412.01784" class="btn-outline" target="_blank" rel="noopener">
+            <a href="https://arxiv.org/abs/2412.01784" class="btn-outline" target="_blank" rel="noopener" data-i18n="p1_paper">
               Read paper →
             </a>
-            <a href="https://github.com/camtice/SandbagDetect" class="btn-outline" target="_blank" rel="noopener">
+            <a href="https://github.com/camtice/SandbagDetect" class="btn-outline" target="_blank" rel="noopener" data-i18n="p1_code">
               Inspect code →
             </a>
           </div>
@@ -619,32 +774,32 @@
           <div class="project-img-color"></div>
         </div>
         <div class="project-text">
-          <p class="label" style="color:#C47B2B; margin-bottom:1rem;">AI Safety &nbsp;·&nbsp; Timaeus Research Inc. &nbsp;·&nbsp; 2025–Present</p>
-          <h3 class="heading-md" style="margin-bottom:1rem;">Bayesian Influence Functions for Hessian-Free Data Attribution</h3>
-          <p style="color:#1A1814; margin-bottom:1rem; font-size:1.05rem;">
+          <p class="label" style="color:#C47B2B; margin-bottom:1rem;" data-i18n-html="p2_label">AI Safety &nbsp;·&nbsp; Timaeus Research Inc. &nbsp;·&nbsp; 2025–Present</p>
+          <h3 class="heading-md" style="margin-bottom:1rem;" data-i18n-html="p2_title">Bayesian Influence Functions for Hessian-Free Data Attribution</h3>
+          <p style="color:#1A1814; margin-bottom:1rem; font-size:1.05rem;" data-i18n="p2_hook">
             How does training data shape model behaviour? We traced it back to individual training samples.
           </p>
           <div class="expandable">
             <div class="expandable-content" style="max-height:0; overflow:hidden; transition: max-height 0.5s ease, opacity 0.4s ease; opacity:0;">
-              <p style="color:#6B6560; margin-bottom:1rem;">
+              <p style="color:#6B6560; margin-bottom:1rem;" data-i18n="p2_detail1">
                 Every AI journey starts with training data. Models can be poisoned through it, hijacked through backdoors, or triggered by hidden vulnerabilities.
               </p>
-              <p style="color:#6B6560; margin-bottom:1rem;">
+              <p style="color:#6B6560; margin-bottom:1rem;" data-i18n="p2_detail2">
                 We traced the behaviour of up to 3 billion parameter models back to individual training tokens using Bayesian influence functions. This is forensics for AI — understanding exactly which data shaped which behaviour, so we can build systems that are safe from the ground up.
               </p>
-              <p style="color:#6B6560; margin-bottom:1rem;">
+              <p style="color:#6B6560; margin-bottom:1rem;" data-i18n-html="p2_detail3">
                 First author at <strong style="color:#1A1814;">ICML 2025</strong> workshop and <strong style="color:#1A1814;">ICLR 2026</strong>.
               </p>
             </div>
-            <button onclick="toggleExpand(this)" class="expand-btn" aria-expanded="false">
-              Read more
+            <button onclick="toggleExpand(this)" class="expand-btn" aria-expanded="false" data-expand-key="p2">
+              <span data-i18n="read_more">Read more</span>
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="transition: transform 0.3s ease;" aria-hidden="true">
                 <path d="M3 5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </button>
           </div>
           <div style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-top:1rem;">
-            <a href="https://arxiv.org/abs/2509.26544" class="btn-outline" target="_blank" rel="noopener">
+            <a href="https://arxiv.org/abs/2509.26544" class="btn-outline" target="_blank" rel="noopener" data-i18n="p2_paper">
               Read paper →
             </a>
           </div>
@@ -662,32 +817,32 @@
           <div class="project-img-color"></div>
         </div>
         <div class="project-text">
-          <p class="label" style="color:#C47B2B; margin-bottom:1rem;">Theoretical Physics &nbsp;·&nbsp; TU Munich &nbsp;·&nbsp; PhD</p>
-          <h3 class="heading-md" style="margin-bottom:1rem;">Feynman Diagram Automation</h3>
-          <p style="color:#1A1814; margin-bottom:1rem; font-size:1.05rem;">
+          <p class="label" style="color:#C47B2B; margin-bottom:1rem;" data-i18n-html="p3_label">Theoretical Physics &nbsp;·&nbsp; TU Munich &nbsp;·&nbsp; PhD</p>
+          <h3 class="heading-md" style="margin-bottom:1rem;" data-i18n="p3_title">Feynman Diagram Automation</h3>
+          <p style="color:#1A1814; margin-bottom:1rem; font-size:1.05rem;" data-i18n="p3_hook">
             What is the origin of mass? I drew thousands of cartoons to find out.
           </p>
           <div class="expandable">
             <div class="expandable-content" style="max-height:0; overflow:hidden; transition: max-height 0.5s ease, opacity 0.4s ease; opacity:0;">
-              <p style="color:#6B6560; margin-bottom:1rem;">
+              <p style="color:#6B6560; margin-bottom:1rem;" data-i18n="p3_detail1">
                 Each one describing how elementary particles collide or how black holes collide. These innocent-looking sketches are called Feynman diagrams, and they hide the terrifying and beautiful mathematics of General Relativity and Quantum Field Theory.
               </p>
-              <p style="color:#6B6560; margin-bottom:1rem;">
+              <p style="color:#6B6560; margin-bottom:1rem;" data-i18n="p3_detail2">
                 My PhD at TU Munich focused on automating their evaluation for Higgs boson production at CERN's Large Hadron Collider and for merging black holes.
               </p>
             </div>
-            <button onclick="toggleExpand(this)" class="expand-btn" aria-expanded="false">
-              Read more
+            <button onclick="toggleExpand(this)" class="expand-btn" aria-expanded="false" data-expand-key="p3">
+              <span data-i18n="read_more">Read more</span>
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="transition: transform 0.3s ease;" aria-hidden="true">
                 <path d="M3 5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </button>
           </div>
           <div style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-top:1rem;">
-            <a href="https://link.springer.com/article/10.1007/JHEP03(2024)093" class="btn-outline" target="_blank" rel="noopener">
+            <a href="https://link.springer.com/article/10.1007/JHEP03(2024)093" class="btn-outline" target="_blank" rel="noopener" data-i18n="p3_higgs">
               Read Higgs boson paper →
             </a>
-            <a href="https://journals.aps.org/prd/abstract/10.1103/PhysRevD.110.076018" class="btn-outline" target="_blank" rel="noopener">
+            <a href="https://journals.aps.org/prd/abstract/10.1103/PhysRevD.110.076018" class="btn-outline" target="_blank" rel="noopener" data-i18n="p3_bh">
               Read black hole paper →
             </a>
           </div>
@@ -703,11 +858,11 @@
   <section id="contact" style="padding:8rem 0;">
     <div class="section-wrap">
       <div style="max-width:640px;" class="fade-up">
-        <p class="label" style="color:#B8B3AE; margin-bottom:1.5rem;">Get in touch</p>
-        <h2 style="font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(2.5rem,5vw,4rem); font-weight:300; letter-spacing:-0.03em; line-height:1.05; color:#F7F4EF; margin-bottom:1.5rem;">
+        <p class="label" style="color:#B8B3AE; margin-bottom:1.5rem;" data-i18n="contact_label">Get in touch</p>
+        <h2 style="font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(2.5rem,5vw,4rem); font-weight:300; letter-spacing:-0.03em; line-height:1.05; color:#F7F4EF; margin-bottom:1.5rem;" data-i18n="contact_heading">
           Let's talk.
         </h2>
-        <p style="color:#B8B3AE; font-size:1.05rem; margin-bottom:3rem; line-height:1.7;">
+        <p style="color:#B8B3AE; font-size:1.05rem; margin-bottom:3rem; line-height:1.7;" data-i18n="contact_desc">
           The best projects start with a real conversation. If something here resonated — or if you know someone it might — I'd be glad to hear from you.
         </p>
         <a href="mailto:philipp.a.kreer@outlook.de" class="contact-email fade-up delay-1">
@@ -735,18 +890,345 @@
   <footer style="background:#111009; padding:1.5rem 0; border-top:1px solid rgba(255,255,255,0.05);">
     <div class="section-wrap" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
       <p style="color:#6B6560; font-size:0.78rem; margin:0;">© 2026 Philipp Alexander Kreer</p>
-      <p style="color:#3D3A36; font-size:0.78rem; margin:0;">Munich, Germany</p>
+      <p style="color:#3D3A36; font-size:0.78rem; margin:0;" data-i18n="footer_location">Munich, Germany</p>
     </div>
   </footer>
 
   <script>
-    // Nav scroll shadow
+    /* ─── Translations ──────────────────────────────────────── */
+    const T = {
+      /* ── Navigation ── */
+      nav_about:    { en: 'About', de: 'Über mich', hu: 'Rólam', es: 'Sobre mí', fr: 'À propos' },
+      nav_work:     { en: 'Work', de: 'Arbeit', hu: 'Munkáim', es: 'Trabajo', fr: 'Travaux' },
+      nav_contact:  { en: 'Contact', de: 'Kontakt', hu: 'Kapcsolat', es: 'Contacto', fr: 'Contact' },
+
+      /* ── Hero ── */
+      hero_label:   { en: 'AI Research Scientist & Builder', de: 'KI-Forscher & Entwickler', hu: 'AI-kutató & fejlesztő', es: 'Investigador de IA & desarrollador', fr: 'Chercheur en IA & développeur' },
+      hero_tagline: {
+        en: 'I build AI solutions for entrepreneurs and small teams. Less tedious work. More of what you love.',
+        de: 'Ich entwickle KI-Lösungen für Unternehmer und kleine Teams. Weniger Routinearbeit. Mehr von dem, was du liebst.',
+        hu: 'AI-megoldásokat építek vállalkozóknak és kis csapatoknak. Kevesebb egyhangú munka. Több abból, amit szeretsz.',
+        es: 'Desarrollo soluciones de IA para emprendedores y equipos pequeños. Menos trabajo tedioso. Más de lo que amas.',
+        fr: 'Je crée des solutions d\'IA pour les entrepreneurs et les petites équipes. Moins de tâches fastidieuses. Plus de ce que vous aimez.'
+      },
+      hero_cta:     { en: 'Get in touch', de: 'Kontakt aufnehmen', hu: 'Lépj kapcsolatba', es: 'Contáctame', fr: 'Me contacter' },
+      hero_work:    { en: 'See my work', de: 'Meine Arbeit', hu: 'Munkáim', es: 'Ver mi trabajo', fr: 'Voir mes travaux' },
+
+      /* ── About ── */
+      about_label:      { en: 'The Idea', de: 'Die Idee', hu: 'Az ötlet', es: 'La idea', fr: 'L\'idée' },
+      about_quote:      {
+        en: '\u201CI wasted years debugging. AI gave me back what I love: researching and building.\u201D',
+        de: '\u201EIch habe Jahre mit Debugging verschwendet. KI hat mir zurückgegeben, was ich liebe: Forschen und Bauen.\u201C',
+        hu: '\u201EÉveket töltöttem hibakereséssel. Az AI visszaadta, amit szeretek: a kutatást és az építést.\u201D',
+        es: '\u00ABDesperdici\u00E9 años depurando código. La IA me devolvió lo que amo: investigar y construir.\u00BB',
+        fr: '\u00AB\u2009J\'ai perdu des années à déboguer. L\'IA m\'a rendu ce que j\'aime\u00A0: chercher et construire.\u2009\u00BB'
+      },
+      about_quote_attr: { en: '— Philipp, on what changed', de: '— Philipp, über das, was sich veränderte', hu: '— Philipp, arról, ami megváltozott', es: '— Philipp, sobre lo que cambió', fr: '— Philipp, sur ce qui a changé' },
+      about_heading:    {
+        en: 'Do more of<br><em>what you love.</em>',
+        de: 'Mach mehr von dem,<br><em>was du liebst.</em>',
+        hu: 'Csinálj többet abból,<br><em>amit szeretsz.</em>',
+        es: 'Haz más de<br><em>lo que amas.</em>',
+        fr: 'Faites plus de<br><em>ce que vous aimez.</em>'
+      },
+      about_p1: {
+        en: 'I love research. The thrill of answering questions no one knows the answer to. But for years, most of my time went elsewhere: debugging code, fixing typos, moving and searching files, updating programs. I spent a fraction of the day on thinking and doing what I enjoyed.',
+        de: 'Ich liebe Forschung. Den Nervenkitzel, Fragen zu beantworten, auf die niemand die Antwort kennt. Aber jahrelang ging meine Zeit woanders hin: Code debuggen, Tippfehler beheben, Dateien suchen und verschieben, Programme aktualisieren. Nur einen Bruchteil des Tages verbrachte ich mit dem, was mir Freude machte.',
+        hu: 'Szeretem a kutatást. Azt az izgalmat, hogy olyan kérdésekre keresem a választ, amelyekre még senki sem tudja. De évekig az időm nagy részét más töltötte ki: kóddal való küzdés, elírások javítása, fájlok keresése és mozgatása, programok frissítése. Napomnak csak egy töredékét tölthettem azzal, amit élveztem.',
+        es: 'Amo la investigación. La emoción de responder preguntas que nadie sabe responder. Pero durante años, la mayor parte de mi tiempo se fue en otra cosa: depurar código, corregir erratas, buscar y mover archivos, actualizar programas. Solo una fracción del día la dedicaba a pensar y hacer lo que disfrutaba.',
+        fr: 'J\'aime la recherche. Le frisson de répondre à des questions auxquelles personne ne connaît la réponse. Mais pendant des années, mon temps passait ailleurs\u00A0: déboguer du code, corriger des fautes de frappe, chercher et déplacer des fichiers, mettre à jour des programmes. Je ne consacrais qu\'une fraction de la journée à ce que j\'aimais.'
+      },
+      about_p2: {
+        en: 'With every new AI release, I automated more of the tedious work. Suddenly I had time. To read papers about things that fascinated me. To sit in the garden with a pencil and paper working out the problems that AI couldn\'t solve. I started doing real research.',
+        de: 'Mit jeder neuen KI-Version automatisierte ich mehr von der Routinearbeit. Plötzlich hatte ich Zeit. Um Arbeiten über Dinge zu lesen, die mich faszinierten. Um mit Stift und Papier im Garten zu sitzen und an Problemen zu arbeiten, die KI nicht lösen konnte. Ich begann, echte Forschung zu betreiben.',
+        hu: 'Minden új AI-kiadással egyre többet automatizáltam az egyhangú munkából. Hirtelen volt időm. Cikkeket olvasni a dolgokról, amelyek lenyűgöztek. A kertben ülni ceruzával és papírral, és azokon a problémákon dolgozni, amelyeket az AI nem tudott megoldani. Elkezdtem igazi kutatást végezni.',
+        es: 'Con cada nueva versión de IA, automaticé más del trabajo tedioso. De repente tenía tiempo. Para leer artículos sobre temas que me fascinaban. Para sentarme en el jardín con lápiz y papel, resolviendo problemas que la IA no podía resolver. Empecé a hacer investigación de verdad.',
+        fr: 'À chaque nouvelle version d\'IA, j\'ai automatisé davantage de tâches fastidieuses. Soudain, j\'avais du temps. Pour lire des articles sur des sujets qui me fascinaient. Pour m\'asseoir dans le jardin avec un crayon et du papier, travaillant sur des problèmes que l\'IA ne pouvait résoudre. J\'ai commencé à faire de la vraie recherche.'
+      },
+      about_p3: {
+        en: 'AI is the tool that frees your passion. It is for the free-lancer buried in admin, or the entrepreneur with a vision to fix a pressing problem. Whatever your craft, I help you do more of it.',
+        de: 'KI ist das Werkzeug, das deine Leidenschaft befreit. Für den Freiberufler, der in Verwaltungsarbeit versinkt, oder den Unternehmer mit der Vision, ein drängendes Problem zu lösen. Was auch immer dein Handwerk ist — ich helfe dir, mehr davon zu tun.',
+        hu: 'Az AI az az eszköz, ami felszabadítja a szenvedélyedet. A szabadúszónak szól, aki adminisztrációba fullad, vagy a vállalkozónak, akinek víziója van egy sürgető probléma megoldására. Bármi is a mesterséged — segítek, hogy többet csinálhass belőle.',
+        es: 'La IA es la herramienta que libera tu pasión. Es para el freelancer enterrado en tareas administrativas, o el emprendedor con la visión de resolver un problema urgente. Sea cual sea tu oficio, te ayudo a hacer más de lo que amas.',
+        fr: 'L\'IA est l\'outil qui libère votre passion. Pour le freelance enseveli sous l\'administratif, ou l\'entrepreneur avec la vision de résoudre un problème urgent. Quel que soit votre métier, je vous aide à en faire davantage.'
+      },
+
+      /* ── Who it's for ── */
+      who_label:        { en: 'Who this is for', de: 'Für wen das ist', hu: 'Kinek szól', es: 'Para quién es', fr: 'À qui ça s\'adresse' },
+      passionate_title: { en: 'The Passionate', de: 'Der Leidenschaftliche', hu: 'A szenvedélyes', es: 'El apasionado', fr: 'Le passionné' },
+      passionate_desc:  {
+        en: 'You love your craft. Half your day you\'re doing something else? I build the tool that gives you back your time.',
+        de: 'Du liebst dein Handwerk. Die Hälfte des Tages verbringst du mit etwas anderem? Ich baue das Werkzeug, das dir deine Zeit zurückgibt.',
+        hu: 'Szereted a mesterségedet. A napod felét mással töltöd? Megépítem az eszközt, ami visszaadja az idődet.',
+        es: 'Amas tu oficio. ¿La mitad del día haces otra cosa? Construyo la herramienta que te devuelve tu tiempo.',
+        fr: 'Vous aimez votre métier. La moitié de la journée, vous faites autre chose\u00A0? Je construis l\'outil qui vous rend votre temps.'
+      },
+      specialist_title: { en: 'The Specialist', de: 'Der Spezialist', hu: 'A szakértő', es: 'El especialista', fr: 'Le spécialiste' },
+      specialist_desc:  {
+        en: 'Off-the-shelf AI doesn\'t fit how you work? I develop systems tailored to your domain.',
+        de: 'Standard-KI passt nicht zu deiner Arbeitsweise? Ich entwickle Systeme, die auf deine Domäne zugeschnitten sind.',
+        hu: 'A kész AI-megoldások nem illenek a munkamódszeredhez? A te szakterületedre szabott rendszereket fejlesztek.',
+        es: '¿La IA estándar no se adapta a tu forma de trabajar? Desarrollo sistemas a medida para tu campo.',
+        fr: 'L\'IA standard ne correspond pas à votre façon de travailler\u00A0? Je développe des systèmes adaptés à votre domaine.'
+      },
+      visionary_title:  { en: 'The Visionary', de: 'Der Visionär', hu: 'A vízionárius', es: 'El visionario', fr: 'Le visionnaire' },
+      visionary_desc:   {
+        en: 'You see what AI could do in your field, but you lack the tools? I research the problem and find out what works.',
+        de: 'Du siehst, was KI in deinem Bereich leisten könnte, aber dir fehlen die Werkzeuge? Ich erforsche das Problem und finde heraus, was funktioniert.',
+        hu: 'Látod, mit tehetne az AI a szakterületeden, de hiányoznak az eszközök? Kutatom a problémát és megtalálom, ami működik.',
+        es: '¿Ves lo que la IA podría hacer en tu campo, pero te faltan las herramientas? Investigo el problema y descubro qué funciona.',
+        fr: 'Vous voyez ce que l\'IA pourrait faire dans votre domaine, mais les outils vous manquent\u00A0? Je recherche le problème et trouve ce qui fonctionne.'
+      },
+
+      /* ── Work — Project 1: Sandbag Detection ── */
+      p1_label:   { en: 'AI Safety &nbsp;&middot;&nbsp; TU Munich &amp; APART Research &nbsp;&middot;&nbsp; 2024\u20132025', de: 'KI-Sicherheit &nbsp;&middot;&nbsp; TU M\u00FCnchen &amp; APART Research &nbsp;&middot;&nbsp; 2024\u20132025', hu: 'AI-biztons\u00E1g &nbsp;&middot;&nbsp; TU M\u00FCnchen &amp; APART Research &nbsp;&middot;&nbsp; 2024\u20132025', es: 'Seguridad de IA &nbsp;&middot;&nbsp; TU M\u00FAnich &amp; APART Research &nbsp;&middot;&nbsp; 2024\u20132025', fr: 'S\u00FBret\u00E9 de l\'IA &nbsp;&middot;&nbsp; TU Munich &amp; APART Research &nbsp;&middot;&nbsp; 2024\u20132025' },
+      p1_title:   {
+        en: 'Noise Injection Reveals Hidden Capabilities of Sandbagging Language Models',
+        de: 'Noise Injection Reveals Hidden Capabilities of Sandbagging Language Models',
+        hu: 'Noise Injection Reveals Hidden Capabilities of Sandbagging Language Models',
+        es: 'Noise Injection Reveals Hidden Capabilities of Sandbagging Language Models',
+        fr: 'Noise Injection Reveals Hidden Capabilities of Sandbagging Language Models'
+      },
+      p1_hook: {
+        en: 'How do you catch a lying AI? You make it drunk.',
+        de: 'Wie ertappt man eine lügende KI? Man macht sie betrunken.',
+        hu: 'Hogyan kapod el a hazudó AI-t? Lerészegíted.',
+        es: '¿Cómo atrapas a una IA que miente? La emborrachas.',
+        fr: 'Comment démasquer une IA qui ment\u00A0? On la rend ivre.'
+      },
+      p1_detail1: {
+        en: 'Just like humans reveal more than they intend after a few drinks, AI systems expose hidden capabilities when you shake them up during interrogation. In mathematical terms: inject random noise into all model parameters during benchmark evaluation. The deception breaks down, the true capabilities surface.',
+        de: 'Genau wie Menschen nach ein paar Drinks mehr preisgeben als beabsichtigt, enthüllen KI-Systeme verborgene Fähigkeiten, wenn man sie während der Befragung durchschüttelt. Mathematisch ausgedrückt: Zufallsrauschen in alle Modellparameter während der Benchmark-Bewertung injizieren. Die Täuschung bricht zusammen, die wahren Fähigkeiten kommen zum Vorschein.',
+        hu: 'Ahogy az emberek is többet árulnak el magukról pár ital után, az AI-rendszerek is felfedik rejtett képességeiket, ha megrázzuk őket a kihallgatás során. Matematikai értelemben: véletlenszerű zajt injektálunk az összes modellparaméterbe a benchmark-értékelés alatt. A megtévesztés összeomlik, az igazi képességek felszínre kerülnek.',
+        es: 'Igual que los humanos revelan más de lo que pretenden después de unas copas, los sistemas de IA exponen capacidades ocultas cuando los sacudes durante el interrogatorio. En términos matemáticos: inyectar ruido aleatorio en todos los parámetros del modelo durante la evaluación de benchmark. El engaño se desmorona, las verdaderas capacidades salen a la luz.',
+        fr: 'Tout comme les humains en révèlent plus qu\'ils ne le souhaitent après quelques verres, les systèmes d\'IA exposent des capacités cachées lorsqu\'on les secoue pendant l\'interrogatoire. En termes mathématiques\u00A0: injecter du bruit aléatoire dans tous les paramètres du modèle pendant l\'évaluation de benchmark. La tromperie s\'effondre, les vraies capacités émergent.'
+      },
+      p1_detail2: {
+        en: 'I used this to detect strategic deception in models like Phi3, Llama 3, and Mistral. First author at <strong style="color:#1A1814;">NeurIPS 2024</strong> workshop, second author at <strong style="color:#1A1814;">NeurIPS 2025</strong>. Featured in the <strong style="color:#1A1814;">AI2027 report</strong>.',
+        de: 'Damit habe ich strategische Täuschung in Modellen wie Phi3, Llama 3 und Mistral aufgedeckt. Erstautor beim <strong style="color:#1A1814;">NeurIPS 2024</strong> Workshop, Zweitautor bei <strong style="color:#1A1814;">NeurIPS 2025</strong>. Vorgestellt im <strong style="color:#1A1814;">AI2027-Bericht</strong>.',
+        hu: 'Ezzel a módszerrel detektáltam a stratégiai megtévesztést olyan modellekben, mint a Phi3, Llama 3 és Mistral. Első szerző a <strong style="color:#1A1814;">NeurIPS 2024</strong> workshopon, második szerző a <strong style="color:#1A1814;">NeurIPS 2025</strong>-ön. Az <strong style="color:#1A1814;">AI2027 jelentés</strong> is bemutatta.',
+        es: 'Utilicé esto para detectar engaño estratégico en modelos como Phi3, Llama 3 y Mistral. Primer autor en el taller <strong style="color:#1A1814;">NeurIPS 2024</strong>, segundo autor en <strong style="color:#1A1814;">NeurIPS 2025</strong>. Presentado en el <strong style="color:#1A1814;">informe AI2027</strong>.',
+        fr: 'J\'ai utilisé cette méthode pour détecter la tromperie stratégique dans des modèles comme Phi3, Llama 3 et Mistral. Premier auteur à l\'atelier <strong style="color:#1A1814;">NeurIPS 2024</strong>, deuxième auteur à <strong style="color:#1A1814;">NeurIPS 2025</strong>. Présenté dans le <strong style="color:#1A1814;">rapport AI2027</strong>.'
+      },
+      p1_paper:   { en: 'Read paper \u2192', de: 'Artikel lesen \u2192', hu: 'Cikk olvasása \u2192', es: 'Leer artículo \u2192', fr: 'Lire l\'article \u2192' },
+      p1_code:    { en: 'Inspect code \u2192', de: 'Code ansehen \u2192', hu: 'Kód megtekintése \u2192', es: 'Ver código \u2192', fr: 'Voir le code \u2192' },
+
+      /* ── Work — Project 2: Timaeus ── */
+      p2_label:   { en: 'AI Safety &nbsp;&middot;&nbsp; Timaeus Research Inc. &nbsp;&middot;&nbsp; 2025\u2013Present', de: 'KI-Sicherheit &nbsp;&middot;&nbsp; Timaeus Research Inc. &nbsp;&middot;&nbsp; 2025\u2013heute', hu: 'AI-biztons\u00E1g &nbsp;&middot;&nbsp; Timaeus Research Inc. &nbsp;&middot;&nbsp; 2025\u2013jelen', es: 'Seguridad de IA &nbsp;&middot;&nbsp; Timaeus Research Inc. &nbsp;&middot;&nbsp; 2025\u2013presente', fr: 'S\u00FBret\u00E9 de l\'IA &nbsp;&middot;&nbsp; Timaeus Research Inc. &nbsp;&middot;&nbsp; 2025\u2013pr\u00E9sent' },
+      p2_title:   {
+        en: 'Bayesian Influence Functions for Hessian-Free Data Attribution',
+        de: 'Bayesian Influence Functions for Hessian-Free Data Attribution',
+        hu: 'Bayesian Influence Functions for Hessian-Free Data Attribution',
+        es: 'Bayesian Influence Functions for Hessian-Free Data Attribution',
+        fr: 'Bayesian Influence Functions for Hessian-Free Data Attribution'
+      },
+      p2_hook: {
+        en: 'How does training data shape model behaviour? We traced it back to individual training samples.',
+        de: 'Wie formen Trainingsdaten das Modellverhalten? Wir haben es bis zu einzelnen Trainingsbeispielen zurückverfolgt.',
+        hu: 'Hogyan formálja a tanítóadat a modell viselkedését? Egészen az egyes tanítómintákig követtük vissza.',
+        es: '¿Cómo moldean los datos de entrenamiento el comportamiento del modelo? Lo rastreamos hasta muestras de entrenamiento individuales.',
+        fr: 'Comment les données d\'entraînement façonnent-elles le comportement du modèle\u00A0? Nous l\'avons retracé jusqu\'aux échantillons individuels.'
+      },
+      p2_detail1: {
+        en: 'Every AI journey starts with training data. Models can be poisoned through it, hijacked through backdoors, or triggered by hidden vulnerabilities.',
+        de: 'Jede KI-Reise beginnt mit Trainingsdaten. Modelle können dadurch vergiftet, durch Hintertüren gekapert oder durch verborgene Schwachstellen manipuliert werden.',
+        hu: 'Minden AI-út a tanítóadattal kezdődik. A modellek megmérgezhetők rajta keresztül, hátsó ajtókon keresztül eltéríthetők, vagy rejtett sebezhetőségekkel manipulálhatók.',
+        es: 'Todo camino de IA comienza con datos de entrenamiento. Los modelos pueden ser envenenados, secuestrados mediante puertas traseras o activados por vulnerabilidades ocultas.',
+        fr: 'Tout parcours d\'IA commence par les données d\'entraînement. Les modèles peuvent être empoisonnés, détournés par des portes dérobées ou déclenchés par des vulnérabilités cachées.'
+      },
+      p2_detail2: {
+        en: 'We traced the behaviour of up to 3 billion parameter models back to individual training tokens using Bayesian influence functions. This is forensics for AI — understanding exactly which data shaped which behaviour, so we can build systems that are safe from the ground up.',
+        de: 'Wir haben das Verhalten von Modellen mit bis zu 3 Milliarden Parametern mithilfe von Bayesianischen Einflussfunktionen auf einzelne Trainingstokens zurückgeführt. Das ist Forensik für KI — genau verstehen, welche Daten welches Verhalten geformt haben, um Systeme von Grund auf sicher zu bauen.',
+        hu: 'Bayesi hatásfüggvények segítségével 3 milliárd paraméteres modellek viselkedését követtük vissza egyes tanítási tokenekig. Ez az AI forenzikája — pontosan megérteni, mely adatok formálták a viselkedést, hogy az alapoktól biztonságos rendszereket építhessünk.',
+        es: 'Rastreamos el comportamiento de modelos de hasta 3 mil millones de parámetros hasta tokens de entrenamiento individuales usando funciones de influencia bayesianas. Esto es forense para IA — entender exactamente qué datos moldearon qué comportamiento, para construir sistemas seguros desde la base.',
+        fr: 'Nous avons retracé le comportement de modèles jusqu\'à 3 milliards de paramètres jusqu\'aux tokens d\'entraînement individuels grâce aux fonctions d\'influence bayésiennes. C\'est de la forensique pour l\'IA\u00A0— comprendre précisément quelles données ont façonné quel comportement, afin de construire des systèmes sûrs dès la conception.'
+      },
+      p2_detail3: {
+        en: 'First author at <strong style="color:#1A1814;">ICML 2025</strong> workshop and <strong style="color:#1A1814;">ICLR 2026</strong>.',
+        de: 'Erstautor beim <strong style="color:#1A1814;">ICML 2025</strong> Workshop und <strong style="color:#1A1814;">ICLR 2026</strong>.',
+        hu: 'Első szerző az <strong style="color:#1A1814;">ICML 2025</strong> workshopon és az <strong style="color:#1A1814;">ICLR 2026</strong>-on.',
+        es: 'Primer autor en el taller <strong style="color:#1A1814;">ICML 2025</strong> y <strong style="color:#1A1814;">ICLR 2026</strong>.',
+        fr: 'Premier auteur à l\'atelier <strong style="color:#1A1814;">ICML 2025</strong> et à <strong style="color:#1A1814;">ICLR 2026</strong>.'
+      },
+      p2_paper:   { en: 'Read paper \u2192', de: 'Artikel lesen \u2192', hu: 'Cikk olvasása \u2192', es: 'Leer artículo \u2192', fr: 'Lire l\'article \u2192' },
+
+      /* ── Work — Project 3: Physics ── */
+      p3_label:   { en: 'Theoretical Physics &nbsp;&middot;&nbsp; TU Munich &nbsp;&middot;&nbsp; PhD', de: 'Theoretische Physik &nbsp;&middot;&nbsp; TU M\u00FCnchen &nbsp;&middot;&nbsp; Promotion', hu: 'Elm\u00E9leti fizika &nbsp;&middot;&nbsp; TU M\u00FCnchen &nbsp;&middot;&nbsp; PhD', es: 'F\u00EDsica te\u00F3rica &nbsp;&middot;&nbsp; TU M\u00FAnich &nbsp;&middot;&nbsp; Doctorado', fr: 'Physique th\u00E9orique &nbsp;&middot;&nbsp; TU Munich &nbsp;&middot;&nbsp; Doctorat' },
+      p3_title:   { en: 'Feynman Diagram Automation', de: 'Automatisierung von Feynman-Diagrammen', hu: 'Feynman-diagramok automatizálása', es: 'Automatización de diagramas de Feynman', fr: 'Automatisation des diagrammes de Feynman' },
+      p3_hook: {
+        en: 'What is the origin of mass? I drew thousands of cartoons to find out.',
+        de: 'Was ist der Ursprung der Masse? Ich zeichnete Tausende von Cartoons, um es herauszufinden.',
+        hu: 'Mi a tömeg eredete? Ezernyi rajzot készítettem, hogy megtudjam.',
+        es: '¿Cuál es el origen de la masa? Dibujé miles de caricaturas para descubrirlo.',
+        fr: 'Quelle est l\'origine de la masse\u00A0? J\'ai dessiné des milliers de croquis pour le découvrir.'
+      },
+      p3_detail1: {
+        en: 'Each one describing how elementary particles collide or how black holes collide. These innocent-looking sketches are called Feynman diagrams, and they hide the terrifying and beautiful mathematics of General Relativity and Quantum Field Theory.',
+        de: 'Jedes einzelne beschreibt, wie Elementarteilchen kollidieren oder wie Schwarze Löcher verschmelzen. Diese unschuldig aussehenden Skizzen heißen Feynman-Diagramme und verbergen die furchterregende und wunderschöne Mathematik der Allgemeinen Relativitätstheorie und der Quantenfeldtheorie.',
+        hu: 'Mindegyik azt írja le, hogyan ütköznek elemi részecskék, vagy hogyan ütköznek fekete lyukak. Ezek az ártatlannak tűnő rajzok Feynman-diagramok, és az általános relativitáselmélet és a kvantumtérelmélet félelmetes és gyönyörű matematikáját rejtik.',
+        es: 'Cada uno describiendo cómo colisionan partículas elementales o cómo chocan agujeros negros. Estos bocetos de apariencia inocente se llaman diagramas de Feynman, y esconden la aterradora y hermosa matemática de la Relatividad General y la Teoría Cuántica de Campos.',
+        fr: 'Chacun décrivant comment les particules élémentaires entrent en collision ou comment les trous noirs fusionnent. Ces croquis d\'apparence innocente s\'appellent des diagrammes de Feynman, et ils cachent les mathématiques terrifiantes et magnifiques de la Relativité Générale et de la Théorie Quantique des Champs.'
+      },
+      p3_detail2: {
+        en: 'My PhD at TU Munich focused on automating their evaluation for Higgs boson production at CERN\'s Large Hadron Collider and for merging black holes.',
+        de: 'Meine Promotion an der TU München konzentrierte sich auf die Automatisierung ihrer Auswertung für die Higgs-Boson-Produktion am Large Hadron Collider des CERN und für verschmelzende Schwarze Löcher.',
+        hu: 'A TU München-i PhD-m során ezek kiértékelésének automatizálásával foglalkoztam a Higgs-bozon-termeléshez a CERN Nagy Hadronütköztetőjében, valamint fekete lyukak összeolvadásához.',
+        es: 'Mi doctorado en la TU Múnich se centró en automatizar su evaluación para la producción del bosón de Higgs en el Gran Colisionador de Hadrones del CERN y para la fusión de agujeros negros.',
+        fr: 'Mon doctorat à la TU Munich portait sur l\'automatisation de leur évaluation pour la production du boson de Higgs au Grand collisionneur de hadrons du CERN et pour la fusion de trous noirs.'
+      },
+      p3_higgs:   { en: 'Read Higgs boson paper \u2192', de: 'Higgs-Boson-Artikel lesen \u2192', hu: 'Higgs-bozon cikk olvasása \u2192', es: 'Leer artículo del bosón de Higgs \u2192', fr: 'Lire l\'article sur le boson de Higgs \u2192' },
+      p3_bh:      { en: 'Read black hole paper \u2192', de: 'Schwarzes-Loch-Artikel lesen \u2192', hu: 'Fekete lyuk cikk olvasása \u2192', es: 'Leer artículo de agujeros negros \u2192', fr: 'Lire l\'article sur les trous noirs \u2192' },
+
+      /* ── Shared ── */
+      read_more:  { en: 'Read more', de: 'Mehr erfahren', hu: 'Tovább olvasom', es: 'Leer más', fr: 'En savoir plus' },
+      read_less:  { en: 'Read less', de: 'Weniger anzeigen', hu: 'Bezárás', es: 'Leer menos', fr: 'Réduire' },
+      work_label: { en: 'Selected Work', de: 'Ausgewählte Arbeiten', hu: 'Válogatott munkák', es: 'Trabajos seleccionados', fr: 'Travaux sélectionnés' },
+
+      /* ── Contact ── */
+      contact_label:   { en: 'Get in touch', de: 'Kontakt aufnehmen', hu: 'Lépj kapcsolatba', es: 'Contáctame', fr: 'Me contacter' },
+      contact_heading: { en: 'Let\'s talk.', de: 'Lass uns reden.', hu: 'Beszélgessünk.', es: 'Hablemos.', fr: 'Parlons-en.' },
+      contact_desc:    {
+        en: 'The best projects start with a real conversation. If something here resonated — or if you know someone it might — I\'d be glad to hear from you.',
+        de: 'Die besten Projekte beginnen mit einem echten Gespräch. Wenn dich etwas hier angesprochen hat — oder du jemanden kennst, den es ansprechen könnte — freue ich mich von dir zu hören.',
+        hu: 'A legjobb projektek egy igazi beszélgetéssel kezdődnek. Ha valami itt rezonált benned — vagy ismersz valakit, akiben rezonálhat — örülnék, ha hallanék rólad.',
+        es: 'Los mejores proyectos comienzan con una conversación real. Si algo aquí resonó contigo — o si conoces a alguien con quien podría — me encantaría saber de ti.',
+        fr: 'Les meilleurs projets commencent par une vraie conversation. Si quelque chose ici vous a parlé — ou si vous connaissez quelqu\'un que ça pourrait toucher — je serais ravi d\'avoir de vos nouvelles.'
+      },
+
+      /* ── Footer ── */
+      footer_location: { en: 'Munich, Germany', de: 'München, Deutschland', hu: 'München, Németország', es: 'Múnich, Alemania', fr: 'Munich, Allemagne' }
+    };
+
+    /* ─── Flag SVGs ─────────────────────────────────────────── */
+    const FLAGS = {
+      en: '<svg viewBox="0 0 60 30"><rect width="60" height="30" fill="#012169"/><path d="M0,0L60,30M60,0L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0L60,30" stroke="#C8102E" stroke-width="4"/><path d="M60,0L0,30" stroke="#C8102E" stroke-width="4"/><rect x="25" width="10" height="30" fill="#fff"/><rect y="11" width="60" height="8" fill="#fff"/><rect x="27" width="6" height="30" fill="#C8102E"/><rect y="12.5" width="60" height="5" fill="#C8102E"/></svg>',
+      de: '<svg viewBox="0 0 5 3"><rect width="5" height="1" fill="#000"/><rect y="1" width="5" height="1" fill="#D00"/><rect y="2" width="5" height="1" fill="#FFCE00"/></svg>',
+      hu: '<svg viewBox="0 0 6 3"><rect width="6" height="1" fill="#CE2939"/><rect y="1" width="6" height="1" fill="#fff"/><rect y="2" width="6" height="1" fill="#477050"/></svg>',
+      es: '<svg viewBox="0 0 6 4"><rect width="6" height="1" fill="#AA151B"/><rect y="1" width="6" height="2" fill="#F1BF00"/><rect y="3" width="6" height="1" fill="#AA151B"/></svg>',
+      fr: '<svg viewBox="0 0 3 2"><rect width="1" height="2" fill="#002654"/><rect x="1" width="1" height="2" fill="#fff"/><rect x="2" width="1" height="2" fill="#CE1126"/></svg>'
+    };
+
+    // Populate all flag containers on load
+    document.querySelectorAll('.lang-flag[data-flag]').forEach(el => {
+      el.innerHTML = FLAGS[el.getAttribute('data-flag')];
+    });
+
+    /* ─── Language state ────────────────────────────────────── */
+    let currentLang = localStorage.getItem('site-lang') || 'en';
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem('site-lang', lang);
+      document.documentElement.lang = lang;
+
+      // Update all data-i18n (textContent) elements
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (T[key] && T[key][lang]) {
+          el.textContent = T[key][lang];
+        }
+      });
+
+      // Update all data-i18n-html (innerHTML) elements
+      document.querySelectorAll('[data-i18n-html]').forEach(el => {
+        const key = el.getAttribute('data-i18n-html');
+        if (T[key] && T[key][lang]) {
+          el.innerHTML = T[key][lang];
+        }
+      });
+
+      // Update expand/collapse button text based on state
+      document.querySelectorAll('.expand-btn').forEach(btn => {
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        const span = btn.querySelector('span');
+        if (span) {
+          const key = expanded ? 'read_less' : 'read_more';
+          span.textContent = T[key][lang];
+        }
+      });
+
+      // Update language picker UI
+      document.getElementById('langFlag').innerHTML = FLAGS[lang];
+      document.getElementById('langCode').textContent = lang.toUpperCase();
+      document.querySelectorAll('.lang-option').forEach(opt => {
+        const isActive = opt.getAttribute('data-lang') === lang;
+        opt.classList.toggle('active', isActive);
+        opt.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      });
+
+      // Update page title
+      const titles = {
+        en: 'Philipp Alexander Kreer — AI Research Scientist & Builder',
+        de: 'Philipp Alexander Kreer — KI-Forscher & Entwickler',
+        hu: 'Philipp Alexander Kreer — AI-kutató & fejlesztő',
+        es: 'Philipp Alexander Kreer — Investigador de IA & desarrollador',
+        fr: 'Philipp Alexander Kreer — Chercheur en IA & développeur'
+      };
+      document.title = titles[lang] || titles.en;
+    }
+
+    /* ─── Language picker interactions ──────────────────────── */
+    const langBtn = document.getElementById('langBtn');
+    const langDropdown = document.getElementById('langDropdown');
+
+    langBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = langDropdown.classList.contains('open');
+      langDropdown.classList.toggle('open', !isOpen);
+      langBtn.setAttribute('aria-expanded', !isOpen);
+    });
+
+    document.querySelectorAll('.lang-option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        const lang = opt.getAttribute('data-lang');
+        setLanguage(lang);
+        langDropdown.classList.remove('open');
+        langBtn.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    // Close dropdown on outside click
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.lang-picker')) {
+        langDropdown.classList.remove('open');
+        langBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    // Close dropdown on Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && langDropdown.classList.contains('open')) {
+        langDropdown.classList.remove('open');
+        langBtn.setAttribute('aria-expanded', 'false');
+        langBtn.focus();
+      }
+    });
+
+    /* ─── Auto-detect language from browser settings ────────── */
+    function detectLanguage() {
+      const browserLangs = navigator.languages || [navigator.language || ''];
+      for (const bl of browserLangs) {
+        const code = bl.split('-')[0].toLowerCase();
+        if (['de', 'hu', 'es', 'fr'].includes(code)) return code;
+      }
+      return 'en';
+    }
+
+    // Apply language on load
+    if (localStorage.getItem('site-lang')) {
+      setLanguage(currentLang);
+    } else {
+      const detected = detectLanguage();
+      setLanguage(detected);
+    }
+
+    /* ─── Nav scroll shadow ─────────────────────────────────── */
     const nav = document.getElementById('nav');
     window.addEventListener('scroll', () => {
       nav.classList.toggle('scrolled', window.scrollY > 20);
     }, { passive: true });
 
-    // Fade-up on scroll
+    /* ─── Fade-up on scroll ─────────────────────────────────── */
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(el => {
         if (el.isIntersecting) {
@@ -758,24 +1240,25 @@
 
     document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 
-    // Expand/collapse
+    /* ─── Expand/collapse ───────────────────────────────────── */
     function toggleExpand(btn) {
       const content = btn.parentElement.querySelector('.expandable-content');
       const expanded = btn.getAttribute('aria-expanded') === 'true';
+      const span = btn.querySelector('span');
       if (expanded) {
         content.style.maxHeight = '0';
         content.style.opacity = '0';
         btn.setAttribute('aria-expanded', 'false');
-        btn.childNodes[0].textContent = 'Read more ';
+        if (span) span.textContent = T.read_more[currentLang] || 'Read more';
       } else {
         content.style.maxHeight = content.scrollHeight + 'px';
         content.style.opacity = '1';
         btn.setAttribute('aria-expanded', 'true');
-        btn.childNodes[0].textContent = 'Read less ';
+        if (span) span.textContent = T.read_less[currentLang] || 'Read less';
       }
     }
 
-    // Responsive grid fix
+    /* ─── Responsive grid fix ───────────────────────────────── */
     const style = document.createElement('style');
     style.textContent = `
       @media (max-width: 768px) {
